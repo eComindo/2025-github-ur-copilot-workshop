@@ -272,6 +272,14 @@ class PomodoroTimer {
             
             if (!response.ok) {
                 console.error('Failed to log session:', response.statusText);
+                return;
+            }
+            
+            const result = await response.json();
+            
+            // Handle gamification updates
+            if (result.gamification) {
+                this.handleGamificationUpdate(result.gamification);
             }
         } catch (error) {
             console.error('Error logging session:', error);
@@ -310,9 +318,137 @@ class PomodoroTimer {
     hideSettings() {
         this.settingsPanel.style.display = 'none';
     }
+    
+    async loadGamificationData() {
+        try {
+            const response = await fetch('/gamification/stats');
+            if (!response.ok) {
+                console.error('Failed to load gamification data');
+                return;
+            }
+            
+            const data = await response.json();
+            this.updateGamificationUI(data);
+        } catch (error) {
+            console.error('Error loading gamification data:', error);
+        }
+    }
+    
+    updateGamificationUI(data) {
+        // Update level and XP
+        if (data.xp) {
+            document.getElementById('level-number').textContent = data.xp.level;
+            document.getElementById('xp-bar').style.width = `${data.xp.progress_percentage}%`;
+            document.getElementById('xp-text').textContent = 
+                `${data.xp.xp_in_level} / ${data.xp.xp_for_next_level} XP`;
+        }
+        
+        // Update streaks
+        if (data.streaks) {
+            document.getElementById('current-streak').textContent = data.streaks.current_streak;
+            document.getElementById('longest-streak').textContent = data.streaks.longest_streak;
+        }
+        
+        // Update statistics
+        if (data.stats) {
+            document.getElementById('total-completed').textContent = data.stats.total_completed;
+            document.getElementById('today-count').textContent = data.stats.today_count;
+            document.getElementById('this-week-count').textContent = data.stats.this_week_count;
+            document.getElementById('completion-rate').textContent = `${data.stats.completion_rate}%`;
+            
+            // Convert focus minutes to hours
+            const hours = Math.floor(data.stats.total_focus_minutes / 60);
+            const minutes = data.stats.total_focus_minutes % 60;
+            document.getElementById('total-focus-time').textContent = 
+                hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+            
+            document.getElementById('best-day').textContent = data.stats.best_day_count;
+        }
+        
+        // Update achievements
+        if (data.achievements) {
+            this.renderAchievements(data.achievements);
+        }
+    }
+    
+    renderAchievements(achievements) {
+        const grid = document.getElementById('achievements-grid');
+        grid.innerHTML = '';
+        
+        if (achievements.length === 0) {
+            grid.innerHTML = '<div class="loading">No achievements yet!</div>';
+            return;
+        }
+        
+        achievements.forEach(achievement => {
+            const item = document.createElement('div');
+            item.className = `achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+            item.title = achievement.description;
+            
+            item.innerHTML = `
+                <div class="achievement-icon">${achievement.icon}</div>
+                <div class="achievement-name">${achievement.name}</div>
+            `;
+            
+            grid.appendChild(item);
+        });
+    }
+    
+    handleGamificationUpdate(gamification) {
+        if (!gamification) return;
+        
+        // Show level up modal
+        if (gamification.leveled_up) {
+            this.showLevelUpModal(gamification.level);
+        }
+        
+        // Show achievement unlocked modals
+        if (gamification.new_achievements && gamification.new_achievements.length > 0) {
+            gamification.new_achievements.forEach((achievement, index) => {
+                setTimeout(() => {
+                    this.showAchievementModal(achievement);
+                }, index * 2000); // Stagger achievement notifications
+            });
+        }
+        
+        // Reload gamification data to update UI
+        this.loadGamificationData();
+    }
+    
+    showLevelUpModal(level) {
+        const modal = document.getElementById('level-up-modal');
+        document.getElementById('new-level-display').textContent = `Level ${level}`;
+        modal.style.display = 'flex';
+        
+        // Auto-close after 3 seconds
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 3000);
+    }
+    
+    showAchievementModal(achievement) {
+        const modal = document.getElementById('achievement-modal');
+        const info = document.getElementById('achievement-unlock-info');
+        
+        info.innerHTML = `
+            <div class="achievement-unlock-icon">${achievement.icon}</div>
+            <div class="achievement-unlock-name">${achievement.name}</div>
+            <div class="achievement-unlock-description">${achievement.description}</div>
+        `;
+        
+        modal.style.display = 'flex';
+        
+        // Auto-close after 4 seconds
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 4000);
+    }
 }
 
 // Initialize the timer when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    new PomodoroTimer();
+    const timer = new PomodoroTimer();
+    
+    // Load initial gamification data
+    timer.loadGamificationData();
 });

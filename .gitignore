@@ -13,3 +13,9 @@ __pycache__/
 # Coverage
 .coverage
 htmlcov/
+
+# Gamification data (user-specific)
+pomodoro_app/gamification_data.json
+
+# Logs
+pomodoro_app/pomodoro_log.txt
