@@ -161,21 +161,18 @@ The project includes comprehensive unit tests for all Flask routes and functiona
 
 **Run all tests:**
 ```bash
-source .venv/bin/activate
 cd pomodoro_app
 uv run pytest test_pomodoro.py -v
 ```
 
 **Run tests with coverage report (terminal):**
 ```bash
-source .venv/bin/activate
 cd pomodoro_app
 uv run pytest test_pomodoro.py --cov=app --cov-report=term-missing
 ```
 
 **Run tests with HTML coverage report:**
 ```bash
-source .venv/bin/activate
 cd pomodoro_app
 uv run pytest test_pomodoro.py --cov=app --cov-report=html
 ```
