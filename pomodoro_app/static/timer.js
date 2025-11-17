@@ -1,5 +1,86 @@
 // Pomodoro Timer JavaScript Implementation
 
+class ParticleEffect {
+    constructor(canvas) {
+        this.canvas = canvas;
+        if (!this.canvas) {
+            console.warn('Particle canvas not found');
+            return;
+        }
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.isActive = false;
+        this.animationId = null;
+        
+        // Set canvas size
+        this.canvas.width = 300;
+        this.canvas.height = 300;
+    }
+    
+    start() {
+        if (!this.canvas) return;
+        this.isActive = true;
+        this.createParticles();
+        this.animate();
+    }
+    
+    stop() {
+        if (!this.canvas) return;
+        this.isActive = false;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+        this.particles = [];
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    
+    createParticles() {
+        if (!this.canvas) return;
+        // Create ripple particles
+        for (let i = 0; i < 3; i++) {
+            this.particles.push({
+                x: this.canvas.width / 2,
+                y: this.canvas.height / 2,
+                radius: 0,
+                maxRadius: 120,
+                opacity: 0.3,
+                speed: 0.5 + Math.random() * 0.5,
+                delay: i * 20
+            });
+        }
+    }
+    
+    animate() {
+        if (!this.isActive || !this.canvas) return;
+        
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach((particle, index) => {
+            if (particle.delay > 0) {
+                particle.delay--;
+                return;
+            }
+            
+            particle.radius += particle.speed;
+            particle.opacity = Math.max(0, 0.3 * (1 - particle.radius / particle.maxRadius));
+            
+            if (particle.radius >= particle.maxRadius) {
+                particle.radius = 0;
+                particle.opacity = 0.3;
+            }
+            
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = `rgba(102, 126, 234, ${particle.opacity})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.stroke();
+        });
+        
+        this.animationId = requestAnimationFrame(() => this.animate());
+    }
+}
+
 class PomodoroTimer {
     constructor() {
         // Timer state
@@ -34,6 +115,15 @@ class PomodoroTimer {
         this.sessionCountEl = document.getElementById('session-count');
         this.timerCircleEl = document.querySelector('.timer-circle');
         this.progressDotsEl = document.getElementById('progress-dots');
+        
+        // Progress ring
+        this.progressCircle = document.getElementById('progress-circle');
+        this.progressCircleRadius = 90;
+        this.progressCircleCircumference = 2 * Math.PI * this.progressCircleRadius;
+        
+        // Particle effect
+        this.particleCanvas = document.getElementById('particle-canvas');
+        this.particleEffect = new ParticleEffect(this.particleCanvas);
         
         // Buttons
         this.startBtn = document.getElementById('start-btn');
@@ -110,19 +200,19 @@ class PomodoroTimer {
     updateDisplay() {
         this.timerTimeEl.textContent = this.formatTime(this.currentTime);
         
+        // Update progress ring
+        this.updateProgressRing();
+        
         // Update session info
         if (this.sessionType === 'work') {
             this.sessionTypeEl.textContent = 'Work Session';
             this.sessionCountEl.textContent = `Session ${this.currentSession} of ${this.maxSessions}`;
-            this.timerCircleEl.className = 'timer-circle active';
         } else if (this.sessionType === 'short_break') {
             this.sessionTypeEl.textContent = 'Short Break';
             this.sessionCountEl.textContent = `After Session ${this.currentSession - 1}`;
-            this.timerCircleEl.className = 'timer-circle break';
         } else {
             this.sessionTypeEl.textContent = 'Long Break';
             this.sessionCountEl.textContent = `After ${this.maxSessions} Sessions`;
-            this.timerCircleEl.className = 'timer-circle break';
         }
         
         // Update status
@@ -138,6 +228,51 @@ class PomodoroTimer {
         
         // Update progress dots
         this.updateProgressDots();
+    }
+    
+    updateProgressRing() {
+        const duration = this.getCurrentDuration();
+        const progress = this.currentTime / duration;
+        const offset = this.progressCircleCircumference * (1 - progress);
+        
+        this.progressCircle.style.strokeDashoffset = offset;
+        
+        // Update color based on progress (gradient: blue -> yellow -> red)
+        const color = this.getProgressColor(progress);
+        this.progressCircle.style.stroke = color;
+    }
+    
+    getProgressColor(progress) {
+        // Blue (start) -> Yellow (middle) -> Red (end)
+        if (progress > 0.5) {
+            // Blue to Yellow
+            const t = (progress - 0.5) * 2;
+            return this.interpolateColor('#667eea', '#f6ad55', 1 - t);
+        } else {
+            // Yellow to Red
+            const t = progress * 2;
+            return this.interpolateColor('#f6ad55', '#fc8181', 1 - t);
+        }
+    }
+    
+    interpolateColor(color1, color2, factor) {
+        const c1 = this.hexToRgb(color1);
+        const c2 = this.hexToRgb(color2);
+        
+        const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+        const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+        const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+        
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+    
+    hexToRgb(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : { r: 0, g: 0, b: 0 };
     }
     
     updateProgressDots() {
@@ -167,6 +302,11 @@ class PomodoroTimer {
         this.isPaused = false;
         this.startBtn.textContent = 'Pause';
         
+        // Start particle effect for work sessions
+        if (this.sessionType === 'work') {
+            this.particleEffect.start();
+        }
+        
         this.intervalId = setInterval(() => {
             if (this.currentTime > 0) {
                 this.currentTime--;
@@ -184,6 +324,9 @@ class PomodoroTimer {
         this.isPaused = true;
         this.startBtn.textContent = 'Start';
         
+        // Stop particle effect
+        this.particleEffect.stop();
+        
         if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
@@ -196,6 +339,9 @@ class PomodoroTimer {
         this.isRunning = false;
         this.isPaused = false;
         this.startBtn.textContent = 'Start';
+        
+        // Stop particle effect
+        this.particleEffect.stop();
         
         if (this.intervalId) {
             clearInterval(this.intervalId);

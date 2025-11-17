@@ -62,31 +62,62 @@ body {
 /* Timer Display */
 .timer-display {
     margin-bottom: 2rem;
+    position: relative;
 }
 
 .timer-circle {
     width: 200px;
     height: 200px;
-    border: 8px solid #e2e8f0;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto;
     position: relative;
-    transition: border-color 0.3s ease;
-}
-
-.timer-circle.active {
-    border-color: #667eea;
-}
-
-.timer-circle.break {
-    border-color: #48bb78;
 }
 
 .timer-inner {
     text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+/* SVG Progress Ring */
+.progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+    fill: none;
+    stroke: #e2e8f0;
+    stroke-width: 8;
+}
+
+.progress-ring-circle {
+    fill: none;
+    stroke: #667eea;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 565.48;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+}
+
+/* Particle Canvas */
+.particle-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .time {
