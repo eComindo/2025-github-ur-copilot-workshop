@@ -23,11 +23,16 @@
         <!-- Timer Display -->
         <div class="timer-display">
             <div class="timer-circle">
+                <svg class="progress-ring" width="200" height="200">
+                    <circle class="progress-ring-circle-bg" cx="100" cy="100" r="90"></circle>
+                    <circle class="progress-ring-circle" cx="100" cy="100" r="90" id="progress-circle"></circle>
+                </svg>
                 <div class="timer-inner">
                     <div class="time" id="timer-time">25:00</div>
                     <div class="status" id="timer-status">Ready to start</div>
                 </div>
             </div>
+            <canvas id="particle-canvas" class="particle-canvas"></canvas>
         </div>
 
         <!-- Control Buttons -->
