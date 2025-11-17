@@ -7,6 +7,7 @@ class PomodoroTimer {
         this.isPaused = false;
         this.currentTime = 0; // in seconds
         this.intervalId = null;
+        this.tickIntervalId = null;
         
         // Session management
         this.currentSession = 1;
@@ -17,12 +18,20 @@ class PomodoroTimer {
         this.settings = {
             workDuration: 25 * 60,
             shortBreakDuration: 5 * 60,
-            longBreakDuration: 15 * 60
+            longBreakDuration: 15 * 60,
+            theme: 'light',
+            soundStart: true,
+            soundEnd: true,
+            soundTick: false
         };
+        
+        // Audio context for sounds
+        this.audioContext = null;
         
         // DOM elements
         this.initializeElements();
         this.loadSettings();
+        this.applyTheme();
         this.resetTimer();
         this.bindEvents();
     }
@@ -48,6 +57,16 @@ class PomodoroTimer {
         this.longBreakInput = document.getElementById('long-break-duration');
         this.saveSettingsBtn = document.getElementById('save-settings-btn');
         this.cancelSettingsBtn = document.getElementById('cancel-settings-btn');
+        
+        // New settings elements
+        this.themeSelect = document.getElementById('theme-select');
+        this.soundStartCheckbox = document.getElementById('sound-start');
+        this.soundEndCheckbox = document.getElementById('sound-end');
+        this.soundTickCheckbox = document.getElementById('sound-tick');
+        
+        // Preset buttons
+        this.workPresetBtns = document.querySelectorAll('.preset-buttons [data-duration]');
+        this.breakPresetBtns = document.querySelectorAll('.preset-buttons [data-break-duration]');
     }
     
     loadSettings() {
@@ -58,26 +77,55 @@ class PomodoroTimer {
             this.settings.workDuration = settings.workDuration * 60;
             this.settings.shortBreakDuration = settings.shortBreakDuration * 60;
             this.settings.longBreakDuration = settings.longBreakDuration * 60;
+            this.settings.theme = settings.theme || 'light';
+            this.settings.soundStart = settings.soundStart !== undefined ? settings.soundStart : true;
+            this.settings.soundEnd = settings.soundEnd !== undefined ? settings.soundEnd : true;
+            this.settings.soundTick = settings.soundTick !== undefined ? settings.soundTick : false;
         }
         
         // Update input fields
         this.workDurationInput.value = Math.floor(this.settings.workDuration / 60);
         this.shortBreakInput.value = Math.floor(this.settings.shortBreakDuration / 60);
         this.longBreakInput.value = Math.floor(this.settings.longBreakDuration / 60);
+        
+        // Update theme select
+        this.themeSelect.value = this.settings.theme;
+        
+        // Update sound checkboxes
+        this.soundStartCheckbox.checked = this.settings.soundStart;
+        this.soundEndCheckbox.checked = this.settings.soundEnd;
+        this.soundTickCheckbox.checked = this.settings.soundTick;
+        
+        // Update preset button states
+        this.updatePresetButtons();
     }
     
     saveSettings() {
+        // Get values from preset buttons or inputs
+        const workDuration = parseInt(this.workDurationInput.value);
+        const shortBreakDuration = parseInt(this.shortBreakInput.value);
+        const longBreakDuration = parseInt(this.longBreakInput.value);
+        
         const settings = {
-            workDuration: parseInt(this.workDurationInput.value),
-            shortBreakDuration: parseInt(this.shortBreakInput.value),
-            longBreakDuration: parseInt(this.longBreakInput.value)
+            workDuration: workDuration,
+            shortBreakDuration: shortBreakDuration,
+            longBreakDuration: longBreakDuration,
+            theme: this.themeSelect.value,
+            soundStart: this.soundStartCheckbox.checked,
+            soundEnd: this.soundEndCheckbox.checked,
+            soundTick: this.soundTickCheckbox.checked
         };
         
         this.settings.workDuration = settings.workDuration * 60;
         this.settings.shortBreakDuration = settings.shortBreakDuration * 60;
         this.settings.longBreakDuration = settings.longBreakDuration * 60;
+        this.settings.theme = settings.theme;
+        this.settings.soundStart = settings.soundStart;
+        this.settings.soundEnd = settings.soundEnd;
+        this.settings.soundTick = settings.soundTick;
         
         localStorage.setItem('pomodoroSettings', JSON.stringify(settings));
+        this.applyTheme();
         this.hideSettings();
         this.resetTimer();
     }
@@ -89,6 +137,23 @@ class PomodoroTimer {
         this.settingsBtn.addEventListener('click', () => this.showSettings());
         this.saveSettingsBtn.addEventListener('click', () => this.saveSettings());
         this.cancelSettingsBtn.addEventListener('click', () => this.hideSettings());
+        
+        // Bind preset button events
+        this.workPresetBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.workPresetBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.workDurationInput.value = e.target.dataset.duration;
+            });
+        });
+        
+        this.breakPresetBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.breakPresetBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.shortBreakInput.value = e.target.dataset.breakDuration;
+            });
+        });
     }
     
     getCurrentDuration() {
@@ -167,10 +232,20 @@ class PomodoroTimer {
         this.isPaused = false;
         this.startBtn.textContent = 'Pause';
         
+        // Play start sound
+        if (this.settings.soundStart) {
+            this.playSound('start');
+        }
+        
         this.intervalId = setInterval(() => {
             if (this.currentTime > 0) {
                 this.currentTime--;
                 this.updateDisplay();
+                
+                // Play tick sound if enabled
+                if (this.settings.soundTick) {
+                    this.playSound('tick');
+                }
             } else {
                 this.completeSession();
             }
@@ -208,6 +283,11 @@ class PomodoroTimer {
     
     async completeSession() {
         this.pauseTimer();
+        
+        // Play end sound
+        if (this.settings.soundEnd) {
+            this.playSound('end');
+        }
         
         // Log the completed session
         await this.logSession('completed');
@@ -309,6 +389,71 @@ class PomodoroTimer {
     
     hideSettings() {
         this.settingsPanel.style.display = 'none';
+    }
+    
+    applyTheme() {
+        // Remove all theme classes
+        document.body.classList.remove('light-theme', 'dark-theme', 'focus-theme');
+        // Add the selected theme class
+        document.body.classList.add(`${this.settings.theme}-theme`);
+    }
+    
+    updatePresetButtons() {
+        const workMinutes = Math.floor(this.settings.workDuration / 60);
+        const breakMinutes = Math.floor(this.settings.shortBreakDuration / 60);
+        
+        // Update work preset buttons
+        this.workPresetBtns.forEach(btn => {
+            if (parseInt(btn.dataset.duration) === workMinutes) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        
+        // Update break preset buttons
+        this.breakPresetBtns.forEach(btn => {
+            if (parseInt(btn.dataset.breakDuration) === breakMinutes) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+    
+    playSound(type) {
+        // Simple beep sounds using Web Audio API
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        // Different frequencies for different sounds
+        switch(type) {
+            case 'start':
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + 0.1);
+                break;
+            case 'end':
+                oscillator.frequency.value = 600;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + 0.3);
+                break;
+            case 'tick':
+                oscillator.frequency.value = 400;
+                gainNode.gain.value = 0.02;
+                oscillator.start();
+                oscillator.stop(this.audioContext.currentTime + 0.05);
+                break;
+        }
     }
 }
 
