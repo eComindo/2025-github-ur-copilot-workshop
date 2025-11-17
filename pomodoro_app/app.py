@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import os
+from gamification import GamificationSystem
 
 app = Flask(__name__)
 
 # Ensure log file exists
 LOG_FILE = 'pomodoro_log.txt'
+GAMIFICATION_DATA_FILE = 'gamification_data.json'
+
+# Initialize gamification system
+gamification = GamificationSystem(LOG_FILE, GAMIFICATION_DATA_FILE)
 
 @app.route('/')
 def index():
@@ -31,7 +36,14 @@ def log_session():
         with open(LOG_FILE, 'a') as f:
             f.write(log_entry)
         
-        return jsonify({'status': 'success', 'message': 'Session logged successfully'})
+        # Award XP and check for achievements
+        gamification_update = gamification.award_xp(session_type, action)
+        
+        return jsonify({
+            'status': 'success',
+            'message': 'Session logged successfully',
+            'gamification': gamification_update
+        })
     
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -58,6 +70,24 @@ def get_history():
         
         return jsonify({'sessions': sessions})
     
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/gamification/stats')
+def get_gamification_stats():
+    """Get comprehensive gamification data"""
+    try:
+        data = gamification.get_gamification_data()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/gamification/achievements')
+def get_achievements():
+    """Get all achievements with unlock status"""
+    try:
+        achievements = gamification.get_all_achievements()
+        return jsonify({'achievements': achievements})
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
