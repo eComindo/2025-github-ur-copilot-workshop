@@ -1,0 +1,436 @@
+/**
+ * Pomodoro Timer - Modern Responsive Styling
+ */
+
+/* ============================================================================
+   CSS Variables and Reset
+   ============================================================================ */
+
+:root {
+  /* Colors */
+  --primary-color: #e74c3c;
+  --primary-dark: #c0392b;
+  --secondary-color: #3498db;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+
+  /* Session Colors */
+  --work-color: #e74c3c;
+  --short-break-color: #3498db;
+  --long-break-color: #9b59b6;
+
+  /* Neutral Colors */
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #2a2a3e;
+  --bg-tertiary: #353549;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8c8;
+  --border-color: #404055;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   Base Styles
+   ============================================================================ */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-md);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* ============================================================================
+   Header
+   ============================================================================ */
+
+header {
+  background: var(--bg-tertiary);
+  padding: var(--spacing-lg);
+  text-align: center;
+  border-bottom: 2px solid var(--border-color);
+}
+
+header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================================
+   Main Content
+   ============================================================================ */
+
+main {
+  padding: var(--spacing-xl);
+}
+
+/* ============================================================================
+   Timer Section
+   ============================================================================ */
+
+.timer-section {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.session-info {
+  margin-bottom: var(--spacing-lg);
+}
+
+.session-type {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.session-counter {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.timer-display {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  border: 3px solid var(--work-color);
+  transition: all 0.3s ease;
+}
+
+.timer-display.work {
+  border-color: var(--work-color);
+}
+
+.timer-display.short-break {
+  border-color: var(--short-break-color);
+}
+
+.timer-display.long-break {
+  border-color: var(--long-break-color);
+}
+
+.timer-display .time {
+  font-size: 6rem;
+  font-weight: 700;
+  font-family: "Courier New", monospace;
+  display: block;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   Controls
+   ============================================================================ */
+
+.controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-md);
+}
+
+.btn {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.btn-success {
+  background: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #229954;
+}
+
+.btn-danger {
+  background: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+/* ============================================================================
+   Status Messages
+   ============================================================================ */
+
+.status-message {
+  display: none;
+  padding: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.status-message.success {
+  background: rgba(39, 174, 96, 0.2);
+  border: 1px solid var(--success-color);
+  color: #2ecc71;
+}
+
+.status-message.error {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid var(--danger-color);
+  color: #e74c3c;
+}
+
+.status-message.info {
+  background: rgba(52, 152, 219, 0.2);
+  border: 1px solid var(--secondary-color);
+  color: #3498db;
+}
+
+.status-message.warning {
+  background: rgba(243, 156, 18, 0.2);
+  border: 1px solid var(--warning-color);
+  color: #f39c12;
+}
+
+/* ============================================================================
+   Settings Section
+   ============================================================================ */
+
+.settings-section {
+  background: var(--bg-tertiary);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--text-primary);
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.form-group input[type="number"] {
+  padding: var(--spacing-sm);
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input[type="number"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* ============================================================================
+   Footer
+   ============================================================================ */
+
+footer {
+  background: var(--bg-tertiary);
+  padding: var(--spacing-lg);
+  text-align: center;
+  border-top: 2px solid var(--border-color);
+}
+
+footer p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ============================================================================
+   Responsive Design
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .timer-display .time {
+    font-size: 4rem;
+  }
+
+  main {
+    padding: var(--spacing-lg);
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: var(--spacing-sm);
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .timer-display .time {
+    font-size: 3rem;
+  }
+
+  .session-type {
+    font-size: 1.2rem;
+  }
+
+  main {
+    padding: var(--spacing-md);
+  }
+
+  header,
+  footer {
+    padding: var(--spacing-md);
+  }
+}
+
+/* ============================================================================
+   Animations
+   ============================================================================ */
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.timer-display:has(.time) {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Smooth transitions for session changes */
+.timer-display,
+.session-type,
+.session-counter {
+  transition: all 0.3s ease;
+}
+
+/* Focus indicators for accessibility */
+.btn:focus,
+input:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
