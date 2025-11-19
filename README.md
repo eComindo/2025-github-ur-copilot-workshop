@@ -238,6 +238,15 @@ This project was built as part of a GitHub Copilot workshop. Feel free to:
 - Submit pull requests
 - Open issues for bugs or enhancements
 
+### Opening Issues
+
+We have issue templates to help you:
+- 🐛 **[Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)** - Report bugs or unexpected behavior
+- ✨ **[Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)** - Suggest new features or improvements
+- 📊 **[Enhanced Logging Feature](.github/ISSUE_TEMPLATE/enhanced_logging_feature.md)** - Specific template for logging enhancements
+
+See **[ISSUE_ENHANCED_LOGGING.md](ISSUE_ENHANCED_LOGGING.md)** for a detailed proposal on enhancing the session logging feature with analytics, export capabilities, and more.
+
 ## 📖 Learning Resources
 
 This project demonstrates:
