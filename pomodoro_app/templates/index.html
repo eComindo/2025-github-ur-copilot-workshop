@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">Pomodoro Timer</h1>
+            <p class="subtitle">Stay focused and productive</p>
+        </header>
+
+        <!-- Session Information -->
+        <div class="session-info">
+            <div class="session-type" id="session-type">Work Session</div>
+            <div class="session-count" id="session-count">Session 1 of 4</div>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer-display">
+            <div class="timer-circle">
+                <div class="timer-inner">
+                    <div class="time" id="timer-time">25:00</div>
+                    <div class="status" id="timer-status">Ready to start</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons -->
+        <div class="controls">
+            <button id="start-btn" class="btn btn-primary">Start</button>
+            <button id="reset-btn" class="btn btn-secondary">Reset</button>
+            <button id="skip-btn" class="btn btn-secondary">Skip</button>
+            <button id="settings-btn" class="btn btn-secondary">Settings</button>
+        </div>
+
+        <!-- Settings Panel (Initially Hidden) -->
+        <div class="settings-panel" id="settings-panel" style="display: none;">
+            <h3>Settings</h3>
+            <div class="setting-item">
+                <label for="work-duration">Work Duration (minutes):</label>
+                <input type="number" id="work-duration" min="1" max="60" value="25">
+            </div>
+            <div class="setting-item">
+                <label for="short-break-duration">Short Break (minutes):</label>
+                <input type="number" id="short-break-duration" min="1" max="30" value="5">
+            </div>
+            <div class="setting-item">
+                <label for="long-break-duration">Long Break (minutes):</label>
+                <input type="number" id="long-break-duration" min="1" max="60" value="15">
+            </div>
+            <div class="setting-item">
+                <button id="save-settings-btn" class="btn btn-primary">Save Settings</button>
+                <button id="cancel-settings-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-dots" id="progress-dots">
+                <span class="dot active" data-session="1"></span>
+                <span class="dot" data-session="2"></span>
+                <span class="dot" data-session="3"></span>
+                <span class="dot" data-session="4"></span>
+            </div>
+        </div>
+
+        <!-- Gamification Section -->
+        <div class="gamification-section">
+            <!-- Level & XP -->
+            <div class="gamification-card">
+                <h3>🎮 Level & Progress</h3>
+                <div class="level-display">
+                    <div class="level-badge" id="level-badge">
+                        <div class="level-number" id="level-number">1</div>
+                        <div class="level-label">Level</div>
+                    </div>
+                    <div class="xp-info">
+                        <div class="xp-bar-container">
+                            <div class="xp-bar" id="xp-bar" style="width: 0%"></div>
+                        </div>
+                        <div class="xp-text" id="xp-text">0 / 100 XP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Streaks -->
+            <div class="gamification-card">
+                <h3>🔥 Streaks</h3>
+                <div class="streak-display">
+                    <div class="streak-item">
+                        <div class="streak-value" id="current-streak">0</div>
+                        <div class="streak-label">Current Streak</div>
+                    </div>
+                    <div class="streak-item">
+                        <div class="streak-value" id="longest-streak">0</div>
+                        <div class="streak-label">Longest Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="gamification-card">
+                <h3>📊 Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-completed">0</div>
+                        <div class="stat-label">Total Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="today-count">0</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="this-week-count">0</div>
+                        <div class="stat-label">This Week</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="completion-rate">0%</div>
+                        <div class="stat-label">Completion Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-focus-time">0h</div>
+                        <div class="stat-label">Total Focus Time</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="best-day">0</div>
+                        <div class="stat-label">Best Day</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="gamification-card">
+                <h3>🏆 Achievements</h3>
+                <div class="achievements-grid" id="achievements-grid">
+                    <!-- Achievements will be loaded dynamically -->
+                    <div class="loading">Loading achievements...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Up Modal -->
+    <div class="modal" id="level-up-modal" style="display: none;">
+        <div class="modal-content">
+            <h2>🎉 Level Up!</h2>
+            <div class="level-up-info">
+                <div class="new-level" id="new-level-display">Level 2</div>
+                <p>Congratulations! You've reached a new level!</p>
+            </div>
+            <button class="btn btn-primary" onclick="document.getElementById('level-up-modal').style.display='none'">Continue</button>
+        </div>
+    </div>
+
+    <!-- Achievement Unlocked Modal -->
+    <div class="modal" id="achievement-modal" style="display: none;">
+        <div class="modal-content">
+            <h2>🏆 Achievement Unlocked!</h2>
+            <div class="achievement-unlock-info" id="achievement-unlock-info">
+                <!-- Achievement details will be inserted here -->
+            </div>
+            <button class="btn btn-primary" onclick="document.getElementById('achievement-modal').style.display='none'">Awesome!</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='timer.js') }}"></script>
+</body>
+</html>

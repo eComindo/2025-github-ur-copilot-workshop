@@ -1,0 +1,547 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+/* Header Styles */
+.header {
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+/* Session Info */
+.session-info {
+    margin-bottom: 2rem;
+}
+
+.session-type {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #667eea;
+    margin-bottom: 0.5rem;
+}
+
+.session-count {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+/* Timer Display */
+.timer-display {
+    margin-bottom: 2rem;
+}
+
+.timer-circle {
+    width: 200px;
+    height: 200px;
+    border: 8px solid #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    transition: border-color 0.3s ease;
+}
+
+.timer-circle.active {
+    border-color: #667eea;
+}
+
+.timer-circle.break {
+    border-color: #48bb78;
+}
+
+.timer-inner {
+    text-align: center;
+}
+
+.time {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #4a5568;
+    font-family: 'Courier New', monospace;
+}
+
+.status {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Control Buttons */
+.controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.btn-primary {
+    background-color: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #5a67d8;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #4a5568;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Settings Panel */
+.settings-panel {
+    background-color: #f7fafc;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.settings-panel h3 {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.setting-item {
+    margin-bottom: 1rem;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.setting-item label {
+    display: block;
+    color: #4a5568;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.setting-item input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.setting-item input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+    margin-top: 1rem;
+}
+
+.progress-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: #667eea;
+}
+
+.dot.completed {
+    background-color: #48bb78;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .timer-circle {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .time {
+        font-size: 2rem;
+    }
+    
+    .controls {
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+        min-width: 70px;
+    }
+}
+
+/* Gamification Section */
+.gamification-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+.gamification-card {
+    background-color: #f7fafc;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.gamification-card h3 {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Level & XP */
+.level-display {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.level-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.level-number {
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.level-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.xp-info {
+    flex: 1;
+}
+
+.xp-bar-container {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+    height: 20px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.xp-bar {
+    background: linear-gradient(90deg, #48bb78 0%, #38a169 100%);
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+.xp-text {
+    color: #718096;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Streaks */
+.streak-display {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+}
+
+.streak-item {
+    text-align: center;
+    flex: 1;
+}
+
+.streak-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #f56565;
+    background: linear-gradient(135deg, #f56565 0%, #ed8936 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.streak-label {
+    color: #718096;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Statistics */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: 8px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #667eea;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #718096;
+    font-size: 0.75rem;
+}
+
+/* Achievements */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+}
+
+.achievement-item {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+    border: 2px solid #e2e8f0;
+}
+
+.achievement-item:hover {
+    transform: translateY(-2px);
+}
+
+.achievement-item.unlocked {
+    border-color: #48bb78;
+    background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+}
+
+.achievement-item.locked {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
+
+.achievement-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+}
+
+.achievement-description {
+    font-size: 0.7rem;
+    color: #718096;
+    line-height: 1.2;
+}
+
+.loading {
+    text-align: center;
+    color: #718096;
+    padding: 2rem;
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    color: #4a5568;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.level-up-info {
+    margin: 2rem 0;
+}
+
+.new-level {
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+}
+
+.achievement-unlock-info {
+    margin: 2rem 0;
+}
+
+.achievement-unlock-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.achievement-unlock-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-unlock-description {
+    color: #718096;
+    font-size: 1rem;
+}
+
+/* Responsive for gamification */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .achievements-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .level-display {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .gamification-card {
+        padding: 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
