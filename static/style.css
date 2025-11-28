@@ -1,0 +1,339 @@
+/* Pomodoro Timer Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+header h1 {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.session-info {
+    text-align: center;
+}
+
+.session-info h2 {
+    color: #34495e;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.session-counter {
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+.timer-display {
+    position: relative;
+    margin: 1rem 0;
+}
+
+.time-circle {
+    position: relative;
+    display: inline-block;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.progress-ring-progress {
+    transition: stroke-dashoffset 1s ease-in-out, stroke 0.3s ease;
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: 300;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+}
+
+.timer-separator {
+    animation: blink 1s infinite;
+    margin: 0 0.2rem;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 100px;
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+
+.btn.pause {
+    background: linear-gradient(135deg, #ffa726, #ff7043);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 167, 38, 0.4);
+}
+
+.btn.pause:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 167, 38, 0.6);
+}
+
+.btn.secondary {
+    background: rgba(108, 122, 137, 0.1);
+    color: #6c7a89;
+    border: 2px solid rgba(108, 122, 137, 0.3);
+}
+
+.btn.secondary:hover {
+    background: rgba(108, 122, 137, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 122, 137, 0.3);
+}
+
+.settings {
+    background: rgba(52, 73, 94, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.setting-item:last-child {
+    margin-bottom: 0;
+}
+
+.setting-item label {
+    color: #34495e;
+    font-weight: 500;
+    flex: 1;
+}
+
+.setting-item input {
+    width: 60px;
+    padding: 0.5rem;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.setting-item input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.status {
+    margin-top: 1rem;
+}
+
+#status-message {
+    color: #7f8c8d;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 0.5rem;
+    background: rgba(127, 140, 141, 0.1);
+    border-radius: 8px;
+}
+
+.history-section {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.history-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.session-item {
+    background: rgba(52, 73, 94, 0.05);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.session-type {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.session-duration {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.session-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.session-status.completed {
+    background: #2ecc71;
+    color: white;
+}
+
+.session-status.skipped {
+    background: #e74c3c;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .timer-text {
+        font-size: 2.5rem;
+    }
+    
+    .controls {
+        gap: 0.5rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        min-width: 80px;
+        font-size: 0.9rem;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .setting-item input {
+        width: 100%;
+        max-width: 100px;
+    }
+}
+
+/* Animation for session transitions */
+.timer-container.transition {
+    animation: fadeInOut 0.5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Focus styles for accessibility */
+.btn:focus,
+.setting-item input:focus {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}

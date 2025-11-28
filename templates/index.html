@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pomodoro Timer</h1>
+        </header>
+        
+        <main class="timer-container">
+            <!-- Session Type Display -->
+            <div class="session-info">
+                <h2 id="session-label">Pomodoro Session</h2>
+                <div class="session-counter">
+                    <span>Session: </span>
+                    <span id="session-number">1</span>
+                </div>
+            </div>
+            
+            <!-- Timer Display -->
+            <div class="timer-display">
+                <div class="time-circle">
+                    <svg class="progress-ring" width="300" height="300">
+                        <circle class="progress-ring-circle" 
+                                stroke="#e6e6e6" 
+                                stroke-width="8" 
+                                fill="transparent" 
+                                r="140" 
+                                cx="150" 
+                                cy="150"/>
+                        <circle class="progress-ring-progress" 
+                                stroke="#ff6b6b" 
+                                stroke-width="8" 
+                                fill="transparent" 
+                                r="140" 
+                                cx="150" 
+                                cy="150"
+                                stroke-dasharray="879.646"
+                                stroke-dashoffset="879.646"
+                                stroke-linecap="round"
+                                transform="rotate(-90 150 150)"/>
+                    </svg>
+                    <div class="timer-text">
+                        <span id="timer-minutes">25</span>
+                        <span class="timer-separator">:</span>
+                        <span id="timer-seconds">00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="controls">
+                <button id="start-pause-btn" class="btn primary">Start</button>
+                <button id="reset-btn" class="btn secondary">Reset</button>
+                <button id="skip-btn" class="btn secondary">Skip</button>
+            </div>
+            
+            <!-- Session Settings -->
+            <div class="settings">
+                <div class="setting-item">
+                    <label for="pomodoro-duration">Pomodoro Duration (minutes):</label>
+                    <input type="number" id="pomodoro-duration" value="25" min="1" max="60">
+                </div>
+                <div class="setting-item">
+                    <label for="break-duration">Break Duration (minutes):</label>
+                    <input type="number" id="break-duration" value="5" min="1" max="30">
+                </div>
+                <div class="setting-item">
+                    <label for="long-break-duration">Long Break Duration (minutes):</label>
+                    <input type="number" id="long-break-duration" value="15" min="1" max="60">
+                </div>
+            </div>
+            
+            <!-- Status Display -->
+            <div class="status">
+                <div id="status-message">Ready to start your Pomodoro session!</div>
+            </div>
+        </main>
+        
+        <!-- Session History (Optional) -->
+        <section class="history-section" style="display: none;">
+            <h3>Today's Sessions</h3>
+            <div id="session-history" class="session-list">
+                <!-- Session history will be populated by JavaScript -->
+            </div>
+        </section>
+    </div>
+    
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
